@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.library'
+    id 'com.vanniktech.maven.publish'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+    ndkVersion '21.4.7075529'
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0.0"
+        externalNativeBuild {
+            ndkBuild {
+                arguments "-j${Runtime.getRuntime().availableProcessors()}"
+            }
+        }
+    }
+    buildFeatures {
+        androidResources false
+        prefabPublishing true
+        buildConfig false
+    }
+    externalNativeBuild {
+        ndkBuild {
+            path "jni/Android.mk"
+        }
+    }
+    prefab {
+        cxx {
+            headers "$rootDir/cxx-source/include"
+        }
+    }
+}
+
+ext {
+    POM_NAME = "libcxx Prefab"
+    POM_DESCRIPTION = "LLVM libc++, specifically for Android, removing exception and RTTI support (https://github.com/topjohnwu/libcxx)."
+}

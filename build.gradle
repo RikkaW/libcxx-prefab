@@ -1,0 +1,67 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:4.1.3"
+
+        // vanniktech/gradle-maven-publish-plugin has hardcoded "oss.sonatype.org"
+        classpath 'com.github.RikkaW:gradle-maven-publish-plugin:87b40318c2'
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.20'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+subprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin('com.vanniktech.maven.publish')) {
+            if (it.parent == rootProject) {
+                group = "${groupIdBase}"
+            } else {
+                group = "${groupIdBase}.${it.parent.name}"
+            }
+            version = android.defaultConfig.versionName
+            println("${it.displayName}: ${group}:${it.name}:${version}")
+
+            mavenPublish {
+                nexus {
+                    baseUrl = "https://s01.oss.sonatype.org"
+                    stagingProfile = "dev.rikka"
+                }
+            }
+        }
+    }
+}
+
+ext {
+    groupIdBase = "dev.rikka.ndk.thirdparty"
+
+    POM_INCEPTION_YEAR = "2021"
+    POM_PACKAGING = "aar"
+
+    POM_URL = "https://github.com/RikkaW/libcxx-prefab"
+    POM_SCM_URL = "https://github.com/RikkaW/libcxx-prefab"
+    POM_SCM_CONNECTION = "scm:git@github.com:RikkaW/libcxx-prefab.git"
+    POM_SCM_DEV_CONNECTION = "scm:git@github.com:RikkaW/libcxx-prefab.git"
+
+    POM_LICENCE_NAME = "Apache License v2.0"
+    POM_LICENCE_URL = "https://github.com/topjohnwu/libcxx/blob/master/LICENSE.TXT"
+    POM_LICENCE_DIST = "repo"
+
+    POM_DEVELOPER_ID = "rikka"
+    POM_DEVELOPER_NAME = "Rikka"
+    POM_DEVELOPER_URL = "https://github.com/RikkaW"
+}
