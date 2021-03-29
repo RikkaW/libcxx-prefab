@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'dev.rikka.ndk.thirdparty:cxx:1.0.0'
+    implementation 'dev.rikka.ndk.thirdparty:cxx:1.1.0'
 }
 ```
 
