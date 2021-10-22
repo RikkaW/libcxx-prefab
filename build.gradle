@@ -1,23 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
+        mavenCentral()
         google()
-        jcenter()
-        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.1.3"
-
-        // vanniktech/gradle-maven-publish-plugin has hardcoded "oss.sonatype.org"
-        classpath 'com.github.RikkaW:gradle-maven-publish-plugin:87b40318c2'
-        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:1.4.20'
+        classpath "com.android.tools.build:gradle:7.0.3"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.18.0'
     }
 }
 
 allprojects {
     repositories {
+        mavenCentral()
         google()
-        jcenter()
+    }
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
     }
 }
 
@@ -35,13 +36,6 @@ subprojects {
             }
             version = android.defaultConfig.versionName
             println("${it.displayName}: ${group}:${it.name}:${version}")
-
-            mavenPublish {
-                nexus {
-                    baseUrl = "https://s01.oss.sonatype.org"
-                    stagingProfile = "dev.rikka"
-                }
-            }
         }
     }
 }
